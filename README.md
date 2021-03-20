@@ -1,1 +1,2 @@
 # AutomationMobileTesting
+Автоматизация мобильного тестирования
