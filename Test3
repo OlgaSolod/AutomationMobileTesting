@@ -1,0 +1,32 @@
+Создала класс MainClass:
+
+public class MainClass {
+    private String class_string = "Hello, world";
+
+    public String getClassString(){
+        return class_string;
+    }
+}
+
+Создала класс MainClassTest:
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class MainClassTest extends MainClass {
+    @Test
+    public void testGetClassString(){
+        if (getClassString().contains("hello")|| getClassString().contains("Hello")){
+            System.out.println("Method getClassString returns string: " + getClassString());
+        } else {
+            Assert.fail("String doesn't contain \"Hello\" or \"hello\"");
+        }
+
+
+    }
+}
+Результат выполнения:
+
+Method getClassString returns string: Hello, world
+
+Process finished with exit code 0
