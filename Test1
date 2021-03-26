@@ -1,0 +1,23 @@
+Создала класс MainClass:
+
+public class MainClass {
+    public static int getLocalNumber(){
+        return 14;
+    }
+}
+
+Создала класс MainClassTest:
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class MainClassTest extends MainClass {
+    @Test
+    public void testGetLocalNumber(){
+        int expected = 14;
+        Assert.assertTrue("The number is not 14", getLocalNumber() == expected);
+    }
+}
+
+Результат выполнения:
+Process finished with exit code 0
