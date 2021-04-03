@@ -1,3 +1,5 @@
+Код:
+
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
@@ -32,3 +34,10 @@ public class FirstTest {
         System.out.println("FirstTestRun");
     }
 }
+
+Результат выполнения кода:
+Apr 03, 2021 10:40:44 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: W3C
+FirstTestRun
+
+Process finished with exit code 0
