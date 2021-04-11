@@ -1,0 +1,105 @@
+Код:
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.net.URL;
+
+public class FirstTest {
+    private AppiumDriver driver;
+
+    @Before
+    public void setUp() throws Exception { //объявили капабилити
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("platformName", "Android");
+        capabilities.setCapability("deviceName", "AndroidTestDevice");
+        capabilities.setCapability("platformVersion", "8.0");
+        capabilities.setCapability("automationName", "Appium");
+        capabilities.setCapability("appPackage", "org.wikipedia");
+        capabilities.setCapability("appActivity", ".main.MainActivity");
+        capabilities.setCapability("app", "C:\\Users\\odsol\\OneDrive\\Desktop\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+        driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+    }
+
+    @After
+    public void tearDown() { //выход из теста
+        driver.quit();
+    }
+ @Test
+    public void findArticlesAndCancelSearch() {
+        waitForElementAndClick(By.id("org.wikipedia:id/search_container"),
+                "Cannot find an element Search_Wikipedia on the page",
+                5);
+        waitForElementPresent(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find a search input",
+                15
+        );
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cat",
+                "Cannot find search field.",
+                15
+        );
+        driver.hideKeyboard();
+        waitForElementPresent(
+                By.xpath("//android.widget.LinearLayout[3]"),
+                "There is no some elements",
+                15
+        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find an element Close_btn on the page",
+                15);
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search…",
+                "The search isn't cleared!"
+        );
+    }
+    private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
+    }
+     private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.click();
+        return element;
+    }
+    private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.sendKeys(value);
+        return element;
+    }
+     private WebElement assertElementHasText(By by, String expected_text, String error_message) {
+        WebElement element = waitForElementPresent(
+                by,
+                error_message,
+                15
+        );
+        String hasText = element.getAttribute("text");
+        Assert.assertEquals(error_message,
+                expected_text,
+                hasText
+        );
+        return element;
+    }
+    
+    
+    Результат:
+    Apr 11, 2021 10:25:21 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: OSS
+
+Process finished with exit code 0
