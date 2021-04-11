@@ -1,0 +1,93 @@
+Текст кода (здесь только тот метод, который я создала):
+
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import sun.plugin.dom.core.Element;
+
+import java.net.URL;
+
+public class FirstTest {
+    private AppiumDriver driver;
+
+    @Before
+    public void setUp() throws Exception { //объявили капабилити
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("platformName", "Android");
+        capabilities.setCapability("deviceName", "AndroidTestDevice");
+        capabilities.setCapability("platformVersion", "8.0");
+        capabilities.setCapability("automationName", "Appium");
+        capabilities.setCapability("appPackage", "org.wikipedia");
+        capabilities.setCapability("appActivity", ".main.MainActivity");
+        capabilities.setCapability("app", "C:\\Users\\odsol\\OneDrive\\Desktop\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+        driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+    }
+
+    @After
+    public void tearDown() { //выход из теста
+        driver.quit();
+    }
+    @Test
+    public void inputFieldContainsText() {
+
+        waitForElementAndClick(By.id("org.wikipedia:id/search_container"),
+                "Cannot find an element Search_Wikipedia on the page",
+                15);
+        waitForElementPresent(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find a search input",
+                15
+        );
+
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search…",
+                "This text hasn't found in this field!"
+
+        );
+        }
+        private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
+    }
+    
+     private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.click();
+        return element;
+    }
+    
+        private WebElement assertElementHasText(By by, String expected_text, String error_message) {
+        WebElement element = waitForElementPresent(
+                by,
+                error_message,
+                15
+        );
+        String hasText = element.getAttribute("text");
+        Assert.assertEquals(error_message,
+                expected_text,
+                hasText
+        );
+        return element;
+    }
+}
+
+Результат:
+
+"C:\Program Files\Java\jdk1.8.0_281\bin\java.exe" -ea -Didea.test.cyclic.buffer.size=1048576 "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\lib\idea_rt.jar=62936:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\bin" -Dfile.encoding=UTF-8 -classpath "C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\lib\idea_rt.jar;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\plugins\junit\lib\junit5-rt.jar;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\plugins\junit\lib\junit-rt.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\rt.jar;C:\Users\odsol\OneDrive\Desktop\JavaAppiumAutomation\out\production\JavaAppiumAutomation;C:\Users\odsol\OneDrive\Desktop\JavaAppiumAutomation\libs\java-client-4.1.2.jar;C:\Users\odsol\OneDrive\Desktop\JavaAppiumAutomation\libs\junit-4.12.jar;C:\Users\odsol\OneDrive\Desktop\JavaAppiumAutomation\libs\selenium-server-standalone-3.4.0.jar" com.intellij.rt.junit.JUnitStarter -ideVersion5 -junit4 FirstTest,inputFieldContainsText
+Apr 11, 2021 5:50:20 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: OSS
+
+Process finished with exit code 0
