@@ -38,11 +38,7 @@ public class FirstTest {
         waitForElementAndClick(By.id("org.wikipedia:id/search_container"),
                 "Cannot find an element Search_Wikipedia on the page",
                 5);
-        waitForElementPresent(
-                By.id("org.wikipedia:id/search_src_text"),
-                "Cannot find a search input",
-                15
-        );
+       
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
                 "Cat",
