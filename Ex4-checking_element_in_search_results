@@ -39,12 +39,12 @@ public class FirstTest {
     
      @Test
 
-    public void checkingWordsInSearch() {
+     public void checkingWordsInSearch() {
 
         waitForElementAndClick(By.id("org.wikipedia:id/search_container"),
                 "Cannot find an element Search_Wikipedia on the page",
                 5);
-        String text_for_search = "Java";
+        String text_for_search = "Cat";
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
                 text_for_search,
@@ -62,10 +62,8 @@ public class FirstTest {
         //узнаем количество элементов, содержащих title (здесь получила 6)
         for (int i = 0; i < elements.size(); i++) {//по замыслу, цикл должен перебрать эти элементы на странице.
             String title = elements.get(i).getAttribute("text").toLowerCase();//игнорируем регистр, в котором написан заголовок
-
-            String s = text_for_search.toLowerCase();//игнорируем регистр в том числе и для поискового запроса
-
-            Assert.assertTrue(title.contains(s));//проверяю, содержится ли слово java в title
+            Assert.assertTrue("The word " + text_for_search + "isn't contain in all results of the page",
+                    title.contains(text_for_search.toLowerCase()));//проверяю, содержится ли слово из поиска в title
 
         }
     }
