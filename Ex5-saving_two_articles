@@ -1,3 +1,5 @@
+Код:
+
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
@@ -35,5 +37,210 @@ public class FirstTest {
     public void tearDown() {
         driver.quit();
     }
+        @Test
+    public void savedTwoArticlesToMyListsAndDeleteOne() {
+        waitForElementAndClick(By.id("org.wikipedia:id/search_container"),
+                "Cannot find an element 'Search_Wikipedia' on the page",
+                5);
+        String search_line_first = "Java";
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                search_line_first,
+                "Cannot find search input.",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.TextView[@text='Java (programming language)']"),
+                "Cannot find 'Java (programming language)' text on the page",
+                15
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title 'Java (programming language)'",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find button to open article options",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find the option to add article to reading list",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/onboarding_button']"),
+                "Cannot find 'Got it' tip overlay",
+                15
+        );
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/text_input"),
+                "Cannot find input to set name of articles folder",
+                15
+        );
+        String name_of_folder = "Learning programming";
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                name_of_folder,
+                "Cannot put text into articles folder input",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='OK']"),
+                "Cannot press OK Button",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article, cannot find X link",
+                15
+        );
+        waitForElementAndClick(By.id("org.wikipedia:id/search_container"),
+                "Cannot find an element 'Search_Wikipedia' on the page",
+                15);
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                search_line_first,
+                "Cannot find search input.",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.TextView[@text='JavaScript']"),
+                "Cannot find 'JavaScript' text on the page",
+                15
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/page_toolbar"),
+                "Cannot find_toolbar container",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find button to open article options",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find the option to add article to reading list",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/item_container']//*[@resource-id='org.wikipedia:id/item_title'][@text='Learning programming']"),
+                "Cannot find 'Lists of lists' element on the page",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article, cannot find X link",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
+                "Cannot find navigation button to my lists",
+                15
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/item_container"),
+                "Cannot find lists of folders",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + name_of_folder + "']"),
+                "Cannot find created folder",
+                15
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/reading_list_contents"),
+                "Cannot load 'list contents' element",
+                15
+        );
+        swipeElementToLeft(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Cannot find saved article"
+        );
+        waitForElementPresent(
+                By.xpath("//*[@text='JavaScript']"),
+                "Cannot find element 'JavaScript'",
+                15
+        );
+        WebElement title_in_list = waitForElementPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title']"),
+                "Cannot find left article",
+                15
+        );
+        String title_in_folder_attribute = title_in_list.getAttribute("text");
+        waitForElementAndClick(
+                By.xpath("//*[@text='JavaScript']"),
+                "Cannot click on 'JavaScript' article",
+                15
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title",
+                15
+        );
+        WebElement title_in_article = waitForElementPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/view_page_title_text']"),
+                "Cannot find article title 'JavaScript'",
+                15
+        );
+        String title_in_article_attribute = title_in_article.getAttribute("text");
+
+        Assert.assertEquals(
+                "Elements isn't concur with!",
+                title_in_folder_attribute,
+                title_in_article_attribute);
+    }
+    private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        return wait.until(
+                ExpectedConditions.presenceOfElementLocated(by)
+        );
+    }
+    private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.click();
+        return element;
+    }
+    private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.sendKeys(value);
+        return element;
+    }
+    private WebElement waitForElementAndClear(By by, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.clear();
+        return element;
+    }
+    protected void swipeElementToLeft(By by, String error_message) {
+        WebElement element = waitForElementPresent(
+                by,
+                error_message,
+                300);
+
+        int left_x = element.getLocation().getX();
+        int right_x = left_x + element.getSize().getWidth();
+        int upper_y = element.getLocation().getY();
+        int lower_y = upper_y + element.getSize().getHeight();
+        int middle_y = (upper_y + lower_y) / 2;
+
+        TouchAction action = new TouchAction(driver);
+        action
+                .press(right_x, middle_y)
+                .waitAction(300)
+                .moveTo(left_x, middle_y)
+                .release()
+                .perform();
+    }
+}
     
+    Результат:
+    "C:\Program Files\Java\jdk1.8.0_281\bin\java.exe" -ea -Didea.test.cyclic.buffer.size=1048576 "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\lib\idea_rt.jar=50043:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\bin" -Dfile.encoding=UTF-8 -classpath "C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\lib\idea_rt.jar;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\plugins\junit\lib\junit5-rt.jar;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.1\plugins\junit\lib\junit-rt.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_281\jre\lib\rt.jar;C:\Users\odsol\OneDrive\Desktop\JavaAppiumAutomation\out\production\JavaAppiumAutomation;C:\Users\odsol\OneDrive\Desktop\JavaAppiumAutomation\libs\java-client-4.1.2.jar;C:\Users\odsol\OneDrive\Desktop\JavaAppiumAutomation\libs\junit-4.12.jar;C:\Users\odsol\OneDrive\Desktop\JavaAppiumAutomation\libs\selenium-server-standalone-3.4.0.jar" com.intellij.rt.junit.JUnitStarter -ideVersion5 -junit4 FirstTest,savedTwoArticlesToMyListsAndDeleteOne
+Apr 18, 2021 9:11:03 PM org.openqa.selenium.remote.ProtocolHandshake createSession
+INFO: Detected dialect: OSS
+
+Process finished with exit code 0
+
     
