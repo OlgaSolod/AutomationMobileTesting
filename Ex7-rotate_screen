@@ -1,0 +1,10 @@
+Создала метод:
+private void checkOrientation(ScreenOrientation orientation) {
+        if (orientation != ScreenOrientation.PORTRAIT) {
+            driver.rotate(ScreenOrientation.PORTRAIT);
+        }
+    }
+    
+И перед каждым тестом этот метод я помещаю перед всеми другими методами и передаю туда параметр driver.getOrientation():
+checkOrientation(driver.getOrientation());
+
