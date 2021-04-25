@@ -1,0 +1,21 @@
+@Test
+    public void testFindTitleInArticle() {
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickByArticleWithSubstring("Java (programming language)");
+
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.waitForTitleElement(0);
+    }
+    
+Перегрузка метода waitForTitleElement:
+
+public WebElement waitForTitleElement(int seconds) {
+        return this.waitForElementPresent(
+                By.id(TITLE),
+                "Cannot find article title",
+                seconds
+        );
+    }
