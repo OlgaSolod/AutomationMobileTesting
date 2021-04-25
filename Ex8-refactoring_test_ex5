@@ -1,0 +1,66 @@
+@Test
+    public void testSavedTwoArticlesToMyListsAndDeleteOne() {
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickByArticleWithSubstring("Java (programming language)");
+
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.waitForTitleElement();
+        String article_title_first = articlePageObject.getArticleTitle();
+        String name_of_folder = "Learning programming";
+        articlePageObject.addArticleToMyList(name_of_folder);
+        articlePageObject.closeArticle();
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickByArticleWithSubstring("JavaScript");
+
+        articlePageObject.waitForTitleElement();
+        String article_title_second = articlePageObject.getArticleTitle();
+        articlePageObject.addArticleToExistingList();
+        articlePageObject.closeArticle();
+
+        NavigationUI navigationUI = new NavigationUI(driver);
+        navigationUI.clickMyLists();
+
+        MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
+        myListsPageObject.openFolderByName(name_of_folder);
+
+        myListsPageObject.swipeArticleToDelete(article_title_first);
+        myListsPageObject.waitForArticleToAppearByTitle(article_title_second);
+        myListsPageObject.openArticleByTitle(article_title_second);
+
+        String title_in_article_attribute = articlePageObject.getArticleTitle();
+
+        Assert.assertEquals(
+                "Elements isn't concur with!",
+                article_title_second,
+                title_in_article_attribute);
+    }
+    
+    
+    Новый метод, который добавила в ArticlePageObject:
+    public void addArticleToExistingList() {
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_BUTTON),
+                "Cannot find button to open article options",
+                15
+        );
+
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find the option to add article to reading list",
+                15
+        );
+
+        this.waitForElementAndClick(               
+                By.xpath(EXISTING_FOLDER),
+                "Cannot find 'Lists of lists' element on the page",
+                15
+        );
+    }
+    
+    Новая константа:
+    public static final String EXISTING_FOLDER = "//*[@text='Learning programming']";
