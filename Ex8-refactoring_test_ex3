@@ -1,0 +1,9 @@
+@Test
+    public void testFindArticlesAndCancelSearch() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Dog");
+        searchPageObject.waitForSearchResult("Dog");
+        searchPageObject.clickCancelSearch();
+        searchPageObject.initSearchField();
+    }
