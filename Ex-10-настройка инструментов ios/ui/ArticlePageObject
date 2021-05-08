@@ -1,0 +1,115 @@
+package lib.ui;
+
+import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.WebElement;
+
+public class ArticlePageObject extends MainPageObject {
+    public static final String
+            TITLE = "id:org.wikipedia:id/view_page_title_text",
+            FOOTER_ELEMENT = "xpath://*[@text='View page in browser']",
+            OPTIONS_BUTTON = "xpath://android.widget.ImageView[@content-desc='More options']",
+            OPTIONS_ADD_TO_MY_LIST_BUTTON = "xpath://*[@text='Add to reading list']",
+            ADD_TO_MY_LIST_OVERLAY = "xpath://*[@resource-id='org.wikipedia:id/onboarding_button']",
+            MY_LIST_NAME_INPUT = "id:org.wikipedia:id/text_input",
+            MY_LIST_OK_BUTTON = "xpath://*[@text='OK']",
+            CLOSE_ARTICLE_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']",
+            EXISTING_FOLDER = "xpath://*[@text='Learning programming']";
+
+
+    public ArticlePageObject(AppiumDriver driver) {
+        super(driver);
+    }
+
+    public WebElement waitForTitleElement() {
+        return this.waitForElementPresent(
+                TITLE,
+                "Cannot find article title",
+                10
+        );
+    }
+
+    public WebElement waitForTitleElement(int seconds) {
+        return this.waitForElementPresent(
+                TITLE,
+                "Cannot find article title",
+                seconds
+        );
+    }
+
+    public String getArticleTitle() {
+        WebElement title_element = waitForTitleElement();
+        return title_element.getAttribute("text");
+    }
+
+    public void swipeToFooter() {
+        this.swipeUpFindToElements(
+                FOOTER_ELEMENT,
+                "Cannot find footer element",
+                20
+        );
+    }
+
+    public void addArticleToMyList(String name_of_folder) {
+        this.waitForElementAndClick(
+                OPTIONS_BUTTON,
+                "Cannot find button to open article options",
+                15
+        );
+        this.waitForElementAndClick(
+                OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                "Cannot find the option to add article to reading list",
+                15
+        );
+        this.waitForElementAndClick(
+                ADD_TO_MY_LIST_OVERLAY,
+                "Cannot find 'Got it' tip overlay",
+                15
+        );
+        this.waitForElementAndClear(
+                MY_LIST_NAME_INPUT,
+                "Cannot find input to set name of articles folder",
+                15
+        );
+
+        this.waitForElementAndSendKeys(
+                MY_LIST_NAME_INPUT,
+                name_of_folder,
+                "Cannot put text into articles folder input",
+                15
+        );
+        this.waitForElementAndClick(
+                MY_LIST_OK_BUTTON,
+                "Cannot press OK Button",
+                15
+        );
+    }
+
+    public void addArticleToExistingList() {
+        this.waitForElementAndClick(
+                OPTIONS_BUTTON,
+                "Cannot find button to open article options",
+                15
+        );
+
+        this.waitForElementAndClick(
+                OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                "Cannot find the option to add article to reading list",
+                15
+        );
+
+        this.waitForElementAndClick(
+                //"//*[@resource-id='org.wikipedia:id/item_container']//*[@resource-id='org.wikipedia:id/item_title'][@text='Learning programming']"
+               EXISTING_FOLDER,
+                "Cannot find 'Lists of lists' element on the page",
+                15
+        );
+    }
+
+    public void closeArticle() {
+        this.waitForElementAndClick(
+                CLOSE_ARTICLE_BUTTON,
+                "Cannot close article, cannot find X link",
+                15
+        );
+    }
+}
